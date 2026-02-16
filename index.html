@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonsuz Aşkımız</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Pinyon+Script&family=Montserrat:wght@300;500&family=Playfair+Display:ital,wght@0,400;1,500&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8e7dbe;
+            --accent: #ff9a9e;
+            --gold: #d4af37;
+            --glass: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-main: #4a4a4a;
+            --bg-gradient: radial-gradient(circle at center, #fdfbf7 0%, #e6dee9 100%);
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        body.night-mode {
+            --primary: #a29bfe;
+            --accent: #fab1a0;
+            --gold: #ffeaa7;
+            --glass: rgba(20, 20, 40, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #dfe6e9;
+            --bg-gradient: radial-gradient(circle at bottom, #1e272e 0%, #000000 100%);
+            --shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-gradient); font-family: 'Montserrat', sans-serif; overflow-x: hidden; color: var(--text-main); transition: background 1.5s ease, color 1.5s ease; }
+
+        /* Arka Plan Hareketleri */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
+
+        /* GİRİŞ KAPISI */
+        #gate {
+            height: 100vh; width: 100%; position: fixed; z-index: 9999;
+            background: var(--bg-gradient);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .gate-content { text-align: center; animation: float 6s ease-in-out infinite; }
+        .hero-title { font-family: 'Pinyon Script', cursive; font-size: 5.5rem; color: var(--primary); text-shadow: 0 0 20px rgba(142, 125, 190, 0.3); margin-bottom: 10px; }
+        .pass-input { padding: 15px 30px; border-radius: 50px; border: 2px solid var(--primary); outline: none; text-align: center; width: 240px; margin-top: 30px; background: rgba(255,255,255,0.8); font-size: 1.1rem; letter-spacing: 5px; transition: 0.3s; }
+        .pass-input:focus { border-color: var(--gold); box-shadow: 0 0 15px var(--gold); }
+        .key-btn { margin-top: 25px; font-size: 2.5rem; cursor: pointer; color: var(--gold); transition: 0.3s; display: inline-block; }
+        .key-btn:hover { transform: scale(1.2) rotate(15deg); text-shadow: 0 0 15px var(--gold); }
+
+        /* ANA DÜNYA */
+        #world { display: none; position: relative; z-index: 2; padding-bottom: 100px; }
+        
+        section { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; opacity: 0; transform: translateY(50px); transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+        section.visible { opacity: 1; transform: translateY(0); }
+
+        /* CAM KART TASARIMI */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px; padding: 50px;
+            box-shadow: var(--shadow);
+            text-align: center; max-width: 900px; width: 95%;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .glass-card:hover { transform: translateY(-5px); }
+
+        h2 { font-family: 'Cinzel', serif; color: var(--text-main); margin-bottom: 20px; letter-spacing: 2px; }
+        .script-font { font-family: 'Pinyon Script', cursive; color: var(--primary); }
+
+        /* DİĞER STİLLER */
+        .time-sanctuary { border: 2px solid var(--gold); background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.0)); }
+        .time-grid { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+        .time-box { background: rgba(255,255,255,0.8); padding: 20px; min-width: 90px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        body.night-mode .time-box { background: rgba(30, 39, 46, 0.8); border: 1px solid var(--primary); }
+        .time-value { font-size: 2.2rem; font-weight: 700; color: var(--primary); font-family: 'Playfair Display'; display: block; }
+        .time-label { font-size: 0.7rem; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; margin-top: 5px; display: block;}
+
+        .love-container { position: relative; margin: 40px 0; }
+        .love-box { padding: 40px; border-radius: 50%; width: 300px; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto; border: 4px double var(--accent); }
+        .love-btn { background: var(--accent); color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; font-size: 1rem; box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4); transition: 0.3s; margin-top: 15px; }
+        .love-btn:active { transform: scale(0.95); }
+        .floating-heart { position: absolute; color: var(--accent); animation: flyUp 1.5s ease-out forwards; pointer-events: none; z-index: 100; font-size: 1.5rem; }
+        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-150px) scale(1.5); } }
+
+        .map-timeline { position: relative; width: 100%; max-width: 700px; margin-top: 40px; }
+        .timeline-line { position: absolute; left: 50%; top: 0; height: 100%; width: 4px; background: var(--gold); transform: translateX(-50%); z-index: 0; border-radius: 2px; }
+        .map-stop { position: relative; margin-bottom: 120px; width: 100%; display: flex; justify-content: center; z-index: 1; }
+        .map-content { background: white; padding: 10px; border-radius: 20px; transform: rotate(-3deg); box-shadow: var(--shadow); border: 4px solid var(--primary); width: 220px; transition: 0.3s; }
+        body.night-mode .map-content { background: #2d3436; }
+        .map-content:hover { transform: rotate(0) scale(1.05); z-index: 5; }
+        .map-content img { width: 100%; border-radius: 15px; }
+        .map-label { position: absolute; background: var(--gold); color: white; padding: 5px 15px; border-radius: 20px; font-family: 'Cinzel'; font-size: 0.8rem; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap; box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
+        .map-stop:nth-child(even) .map-content { transform: rotate(3deg); }
+
+        .polaroid-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 30px; }
+        .polaroid { background: white; padding: 15px 15px 40px 15px; border-radius: 5px; box-shadow: var(--shadow); width: 200px; transition: 0.4s ease; transform: rotate(var(--r)); }
+        body.night-mode .polaroid { background: #2d3436; }
+        .polaroid:hover { transform: scale(1.1) rotate(0deg) !important; z-index: 10; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .polaroid img { width: 100%; height: 200px; object-fit: cover; border-radius: 3px; }
+        .polaroid p { font-family: 'Dancing Script'; margin-top: 15px; font-size: 1.2rem; color: var(--text-main); }
+
+        .photo-grid-frame { background: var(--glass); padding: 20px; border-radius: 20px; max-width: 480px; }
+        .photo-heart-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; }
+        .p-item { aspect-ratio: 1/1; overflow: hidden; border-radius: 2px; transition: 0.2s; }
+        .p-item:hover { transform: scale(1.5); z-index: 10; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+        .p-item img { width: 100%; height: 100%; object-fit: cover; }
+        .p-empty { visibility: hidden; }
+
+        .star-map-container { position: relative; width: 280px; height: 280px; margin: 0 auto; border-radius: 50%; border: 2px dashed var(--gold); padding: 10px; animation: spinSlow 60s linear infinite; }
+        .star-map-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
+        @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .capsule { border: 2px dashed var(--text-main); padding: 40px; border-radius: 30px; position: relative; }
+        
+        .lucky-heart { position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 20px var(--accent); z-index: 999; animation: pulse 2s infinite; }
+        .lucky-msg { position: fixed; bottom: 100px; left: 30px; background: white; color: var(--primary); padding: 15px 25px; border-radius: 20px 20px 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-family: 'Dancing Script'; font-size: 1.3rem; display: none; z-index: 999; min-width: 200px; }
+        
+        .music-control { position: fixed; bottom: 30px; right: 30px; background: var(--glass); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--primary); cursor: pointer; display: flex; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .bars { display: flex; gap: 3px; height: 15px; align-items: flex-end; }
+        .bar { width: 4px; background: var(--primary); animation: equalizer 1s infinite; }
+        .bar:nth-child(2) { animation-delay: 0.2s; } .bar:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes equalizer { 0%, 100% { height: 5px; } 50% { height: 15px; } }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="particles"></div>
+
+    <div class="lucky-heart" onclick="showCookie()"><i class="fas fa-heart"></i></div>
+    <div class="lucky-msg" id="cookie-msg"></div>
+
+    <div class="music-control" onclick="toggleMusic()">
+        <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+        <span style="font-family: 'Cinzel'; font-size: 0.5rem; font-weight: bold;">BİZİM ŞARKIMIZ</span>
+    </div>
+    <audio id="bgm" loop><source src="anason.mp3" type="audio/mpeg"></audio>
+
+    <div id="gate">
+        <div class="gate-content">
+            <h1 class="hero-title">Sadece Bizim..</h1>
+            <p style="font-family: 'Cinzel'; letter-spacing: 5px; color: var(--text-main);">O Günü Yaz Sevgilim</p>
+            <input type="password" id="pass" class="pass-input" placeholder="GG.AA.YYYY">
+            <br>
+            <div class="key-btn" onclick="unlock()"><i class="fas fa-key"></i></div>
+        </div>
+    </div>
+
+    <div id="world">
+        
+        <section class="reveal">
+            <div class="glass-card">
+                <h2 class="script-font" style="font-size: 4.5rem;">Hoş Geldin Sevgilim</h2>
+                <p style="font-size: 1.2rem; margin-top: 10px;">Senin Her Anın Benim İçin MUTLULUK...</p>
+                <i class="fas fa-chevron-down" style="margin-top: 30px; font-size: 1.5rem; color: var(--gold); animation: float 2s infinite;"></i>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2 style="font-size: 2.5rem;">Aşkın Rotası</h2>
+            <div class="map-timeline">
+                <div class="timeline-line"></div>
+                <div class="map-stop">
+                    <div class="map-content">
+                        <span class="map-label">İlk 'seni seviyorum'</span>
+                        <img src="https://i.hizliresim.com/3djcaa.png" alt="Tanışma">
+                    </div>
+                </div>
+                <div class="map-stop">
+                    <div class="map-content">
+                        <span class="map-label">Uzak Mesafede Kalpler Yakın</span>
+                        <img src="https://i.hizliresim.com/kyej4k0.png" alt="Buluşma">
+                    </div>
+                </div>
+                <div class="map-stop">
+                    <div class="map-content">
+                        <span class="map-label">Sonsuzluk</span>
+                        <img src="https://i.hizliresim.com/ifger2i.jpg" alt="Bugün">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card">
+                <i class="fas fa-star" style="color: var(--gold); font-size: 2rem; margin-bottom: 10px;"></i>
+                <h2 style="font-family: 'Cinzel';">O Gece Gökyüzü</h2>
+                <p class="script-font" style="font-size: 1.8rem; margin-bottom: 20px;">Dünya durdu, biz başladık...</p>
+                <div class="star-map-container">
+                    <img src="https://i.hizliresim.com/t2r8b0y.png" class="star-map-img">
+                </div>
+                <p style="margin-top: 20px; font-weight: bold;">17.05.2024</p>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2 style="font-family: 'Cinzel'; margin-bottom: 30px;">Dün, Bugün ve Yarın</h2>
+            <div class="glass-card">
+                <div class="polaroid-grid">
+                    <div class="polaroid" style="--r: -3deg;"><img src="https://i.hizliresim.com/iu4883r.jpg"><p>Minik Sen</p></div>
+                    <div class="polaroid" style="--r: 2deg;"><img src="https://i.hizliresim.com/oqmj089.jpg"><p>Minik Ben</p></div>
+                    <div class="polaroid" style="--r: -1deg; border: 2px solid var(--accent);"><img src="https://i.hizliresim.com/i25ndn7.jpg"><p>Geleceğimiz 👼</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card" style="padding: 20px;"> 
+                <h2 style="margin-bottom: 20px;">İlk Dansımız</h2> 
+                <img src="https://image2url.com/r2/default/gifs/1771282647191-26582ea5-e6d8-4062-8d08-708e10d30f38.gif" alt="İlk Dansımız" style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card" style="padding: 10px; overflow: hidden;">
+                <img src="https://i.hizliresim.com/gotsl6y.jpg" style="width:100%; border-radius: 30px;">
+                <div style="padding: 30px;">
+                    <h2 class="script-font" style="font-size: 2.5rem;">Hayallerimdeki Yuvamız</h2>
+                    <p>Bir gün, sadece bize ait olan o kapıdan içeri gireceğiz...</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card time-sanctuary">
+                <i class="fas fa-hourglass-half" style="color: var(--gold); font-size: 2rem; margin-bottom: 15px;"></i>
+                <h2 class="script-font" style="font-size: 3.0rem;">İlk ''Seni Seviyorum'' Dememden Bu Kadar Geçti</h2>
+                <div class="time-grid">
+                    <div class="time-box"><span class="time-value" id="d-days">0</span><span class="time-label">Gün</span></div>
+                    <div class="time-box"><span class="time-value" id="d-hours">0</span><span class="time-label">Saat</span></div>
+                    <div class="time-box"><span class="time-value" id="d-mins">0</span><span class="time-label">Dakika</span></div>
+                    <div class="time-box"><span class="time-value" id="d-secs">0</span><span class="time-label">Saniye</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="love-container">
+                <div class="love-box glass-card">
+                    <p style="font-size: 0.9rem; letter-spacing: 2px;">BENİ NE KADAR HEYECANLANDIRIYORSUN DELİ KIZ</p>
+                    <h1 id="love-count" style="font-size: 4rem; color: var(--primary); margin: 10px 0;">%0</h1>
+                    <button class="love-btn" id="loveBtn" onclick="boostLove(event)">Kalbimin Ritmi<i class="fas fa-heart"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="photo-grid-frame">
+                <div class="photo-heart-grid">
+                     <div class="p-empty"></div><div class="p-empty"></div><div class="p-item"><img src="1.jpg"></div><div class="p-item"><img src="2.jpg"></div><div class="p-empty"></div><div class="p-item"><img src="3.jpg"></div><div class="p-item"><img src="4.jpg"></div><div class="p-empty"></div><div class="p-empty"></div>
+                    <div class="p-empty"></div><div class="p-item"><img src="5.jpg"></div><div class="p-item"><img src="6.jpg"></div><div class="p-item"><img src="7.jpg"></div><div class="p-item"><img src="8.jpg"></div><div class="p-item"><img src="9.jpg"></div><div class="p-item"><img src="10.jpg"></div><div class="p-item"><img src="11.jpg"></div><div class="p-empty"></div>
+                    <div class="p-item"><img src="12.jpg"></div><div class="p-item"><img src="13.jpg"></div><div class="p-item"><img src="14.jpg"></div><div class="p-item"><img src="15.jpg"></div><div class="p-item"><img src="16.jpg"></div><div class="p-item"><img src="17.jpg"></div><div class="p-item"><img src="18.jpg"></div><div class="p-item"><img src="19.jpg"></div><div class="p-item"><img src="20.jpg"></div>
+                    <div class="p-item"><img src="21.jpg"></div><div class="p-item"><img src="22.jpg"></div><div class="p-item"><img src="23.jpg"></div><div class="p-item"><img src="24.jpg"></div><div class="p-item"><img src="25.jpg"></div><div class="p-item"><img src="26.jpg"></div><div class="p-item"><img src="27.jpg"></div><div class="p-item"><img src="28.jpg"></div><div class="p-item"><img src="29.jpg"></div>
+                    <div class="p-empty"></div><div class="p-item"><img src="30.jpg"></div><div class="p-item"><img src="31.jpg"></div><div class="p-item"><img src="32.jpg"></div><div class="p-item"><img src="33.jpg"></div><div class="p-item"><img src="34.jpg"></div><div class="p-item"><img src="35.jpg"></div><div class="p-item"><img src="36.jpg"></div><div class="p-empty"></div>
+                    <div class="p-empty"></div><div class="p-empty"></div><div class="p-item"><img src="37.jpg"></div><div class="p-item"><img src="38.jpg"></div><div class="p-item"><img src="39.jpg"></div><div class="p-item"><img src="40.jpg"></div><div class="p-item"><img src="41.jpg"></div><div class="p-empty"></div><div class="p-empty"></div>
+                    <div class="p-empty"></div><div class="p-empty"></div><div class="p-empty"></div><div class="p-empty"></div><div class="p-item"><img src="42.jpg"></div><div class="p-empty"></div><div class="p-empty"></div><div class="p-empty"></div><div class="p-empty"></div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <i class="fab fa-spotify" style="color: #1DB954; font-size: 2rem;"></i>
+                    <h3 style="margin-top: 5px;">B & O - Sonsuza Dek</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card capsule" id="capsule-container">
+                <p>Zaman kontrol ediliyor...</p>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="glass-card">
+                <p style="font-family: 'Playfair Display'; font-size: 1.3rem; line-height: 2;">
+                    "Hayatımın en güzel tesadüfü değil, en güzel gerçeğisin.Bu mektubu okurken bana sinirli olduğunu hatta siteyi açarken bile sinirli olacağını biliyorum ama azıcık zor oldu kodlaması biraz zaman lazımdı ama sana değer... Öncelikle gözümde herşeyden değerli olduğunu bil sevgilim seni zannettiğin dünyadaki erkek modelleri gibi sevmediğimi de. Evet senle birçok hata yaptım ama herşeyin farkına vardım bebeğim.Ben hala seni çok seven başkasında gözü olmayan Osmanınım.
+                  Seninle hala hayaller kuruyorum hala sensiyorum hala başka kadınlar bana et parçası gibi geliyor. Şunu bilmeni isterim ki sen benim en büyük şansımsın ve evet seninle evlencem ve evet seni sinir etcem ve sen beni tekrardan dünyaya getireceksin.
+                  Seni çok seviyorum"
+                </p>
+                <p class="script-font" style="font-size: 3rem; text-align: right; margin-top: 20px;">Seni Seven...</p>
+            </div>
+            <div style="height: 100px;"></div>
+            <p style="letter-spacing: 5px; font-size: 1.5rem;">İYİ Kİ BİZ</p>
+        </section>
+
+    </div>
+
+    <script>
+        // --- AYARLAR ---
+        const PASS = "1402";
+        const DATE = new Date("2024-05-17");
+        
+        // ZAMAN KAPSÜLÜ AYARLARI
+        const TARGET_MONTH = 5; // Mayıs
+        const TARGET_DAY = 17;  // 17'si
+        const CAPSULE_KEY = "bizim_sonsuz_notumuz_v2";
+
+        // Gece-Gündüz Kontrolü
+        const hour = new Date().getHours();
+        if(hour < 6 || hour >= 18) {
+            document.body.classList.add('night-mode');
+            createStars(); 
+        }
+
+        // --- ZAMAN KAPSÜLÜ FONKSİYONU ---
+        function checkCapsule() {
+            const container = document.getElementById('capsule-container');
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const currentDay = now.getDate();
+
+            // DURUM 1: BUGÜN YILDÖNÜMÜ DEĞİLSE (KİLİTLİ)
+            if (currentMonth !== TARGET_MONTH || currentDay !== TARGET_DAY) {
+                let nextAnniversary = new Date(now.getFullYear(), TARGET_MONTH - 1, TARGET_DAY);
+                if (now > nextAnniversary) {
+                    nextAnniversary.setFullYear(nextAnniversary.getFullYear() + 1);
+                }
+                const diffTime = Math.abs(nextAnniversary - now);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                container.innerHTML = `
+                    <i class="fas fa-lock" style="font-size: 3.5rem; color: var(--text-main); margin-bottom: 15px;"></i>
+                    <h2 style="font-family: 'Cinzel';">Sadece O Gün...</h2>
+                    <p>Bu kapsül sadece yıldönümümüzde (${TARGET_DAY}.${TARGET_MONTH}) açılır.</p>
+                    <div style="margin-top: 25px; padding: 15px 30px; background: rgba(0,0,0,0.05); border-radius: 50px; border: 1px solid var(--gold); display: inline-block;">
+                        <span style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">${diffDays}</span> Gün Kaldı
+                    </div>
+                `;
+            } 
+            // DURUM 2: BUGÜN YILDÖNÜMÜ! (AÇIK)
+            else {
+                const savedMsg = localStorage.getItem(CAPSULE_KEY);
+
+                if (!savedMsg) {
+                    container.innerHTML = `
+                        <i class="fas fa-heart" style="font-size: 3rem; color: var(--accent); animation: pulse 1s infinite;"></i>
+                        <h2 style="font-family: 'Cinzel';">Mutlu Yıldönümleri!</h2>
+                        <p>Bugün bizim günümüz. Gelecek seneye kadar saklanacak notunu yaz:</p>
+                        <textarea id="capsule-text" style="width: 100%; height: 120px; margin: 20px 0; padding: 15px; border-radius: 15px; border: 2px solid var(--gold); font-family: 'Montserrat';" placeholder="Seni çok seviyorum çünkü..."></textarea>
+                        <button onclick="saveMessage()" style="padding: 12px 30px; background: var(--primary); color: white; border: none; border-radius: 30px; cursor: pointer;">💌 Seneye Kadar Sakla</button>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <i class="fas fa-envelope-open-text" style="font-size: 3.5rem; color: var(--gold);"></i>
+                        <h2 style="font-family: 'Cinzel';">Geçmişten Bir Not</h2>
+                        <div style="margin: 20px 0; padding: 20px; background: white; border-radius: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1);">
+                            <p style="font-family: 'Dancing Script'; font-size: 1.5rem;">"${savedMsg}"</p>
+                        </div>
+                        <p style="font-size: 0.8rem;">Bu notu okudun. Şimdi yenisini yazmak ister misin?</p>
+                        <button onclick="resetMessage()" style="margin-top: 10px; padding: 8px 20px; background: var(--accent); color: white; border: none; border-radius: 20px; cursor: pointer;">Yeni Not Yaz ↻</button>
+                    `;
+                }
+            }
+        }
+
+        function saveMessage() {
+            const text = document.getElementById('capsule-text').value;
+            if(!text.trim()) return alert("Boş not bırakılmaz sevgilim :)");
+            localStorage.setItem(CAPSULE_KEY, text);
+            checkCapsule(); 
+        }
+
+        function resetMessage() {
+            if(confirm("Eski not silinip yeni not ekranı açılacak. Emin misin?")) {
+                localStorage.removeItem(CAPSULE_KEY);
+                checkCapsule();
+            }
+        }
+
+        // --- GİRİŞ VE DİĞER FONKSİYONLAR ---
+        function unlock() {
+            if(document.getElementById('pass').value === PASS) {
+                document.getElementById('gate').style.opacity = "0";
+                document.getElementById('gate').style.transform = "scale(1.1)";
+                setTimeout(() => {
+                    document.getElementById('gate').style.display = "none";
+                    document.getElementById('world').style.display = "block";
+                    startScrollObserve();
+                    // Müziği başlatmayı dene
+                    const bgm = document.getElementById('bgm');
+                    bgm.play().catch(() => console.log("Otomatik oynatma tarayıcı tarafından engellendi."));
+                    checkCapsule(); // Kapsülü kontrol et
+                }, 1000);
+            } else {
+                alert("Lütfen o günü hatırla meleğim...");
+            }
+        }
+
+        function startScrollObserve() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(s => observer.observe(s));
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            const diff = now - DATE;
+            document.getElementById('d-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('d-hours').innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            document.getElementById('d-mins').innerText = Math.floor((diff / (1000 * 60)) % 60);
+            document.getElementById('d-secs').innerText = Math.floor((diff / 1000) % 60);
+        }, 1000);
+
+        let love = 100;
+        function boostLove(e) {
+            love += Math.floor(Math.random() * 10) + 5;
+            document.getElementById('love-count').innerText = "%" + love;
+            
+            for(let i=0; i<5; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = (e.clientX + (Math.random()*60 - 30)) + 'px';
+                heart.style.top = (e.clientY + (Math.random()*60 - 30)) + 'px';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1500);
+            }
+        }
+
+        const messages = [
+            "Bugün seni dünden daha çok seviyorum.",
+            "Gülüşün benim favori manzaram.",
+            "Sen benim en güzel 'iyi ki'msin.",
+            "Ellerin ellerime, kalbin kalbime...",
+            "Dünya dönüyor ama benim merkezim sensin."
+        ];
+        function showCookie() {
+            const msgBox = document.getElementById('cookie-msg');
+            msgBox.innerText = messages[Math.floor(Math.random() * messages.length)];
+            msgBox.style.display = "block";
+            setTimeout(() => { msgBox.style.display = "none"; }, 4000);
+        }
+
+        function toggleMusic() {
+            const bgm = document.getElementById('bgm');
+            bgm.paused ? bgm.play() : bgm.pause();
+        }
+
+        function createStars() {
+            const container = document.getElementById('particles');
+            for(let i=0; i<50; i++) {
+                let s = document.createElement('div');
+                s.className = 'star';
+                s.style.left = Math.random() * 100 + "vw";
+                s.style.top = Math.random() * 100 + "vh";
+                s.style.width = s.style.height = Math.random() * 3 + "px";
+                s.style.animationDelay = Math.random() * 2 + "s";
+                container.appendChild(s);
+            }
+        }
+        
+        // Sayfa ilk yüklendiğinde de kapsülü kontrol et
+        window.addEventListener('load', checkCapsule);
+    </script>
+</body>
+</html>
